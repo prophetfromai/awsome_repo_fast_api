@@ -16,7 +16,7 @@
   
 	"forwardPorts": [8000],  // Example port forwarding for web servers
   
-	"postCreateCommand": "[ -f install_gcloud.sh ] && chmod +x install_gcloud.sh && /bin/bash ./install_gcloud.sh || echo 'install_gcloud.sh not found' || pip install --upgrade && pip install -r requirements.txt" ,
+	"postCreateCommand": "[ -f install_gcloud.sh ] && chmod +x install_gcloud.sh && /bin/bash ./install_gcloud.sh || echo 'install_gcloud.sh not found' || pip install --upgrade pip && pip install -r requirements.txt" ,
 	"mounts": [
 		"source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind"
 	]
