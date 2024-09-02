@@ -62,5 +62,6 @@ cloud run deploy fastapi-python312-app \  --image gcr.io/zac-test-app-run/fastap
 
 
 or
-
+gcloud init
 gcloud builds submit --config cloudbuild.yaml .
+

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
+import os
 
 app = FastAPI()
 
@@ -12,26 +13,32 @@ class HelloWorldResponse(BaseModel):
 def hello_world():
     return {"message": "OK"}
 
-# Store the original openapi method
+# Store the original OpenAPI method
 original_openapi = app.openapi
 
 # Custom OpenAPI schema generation
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
+    
     openapi_schema = original_openapi().copy()  # Use the stored original method
+
+    # Retrieve the server URL from the environment variable
+    server_url = os.getenv("BASE_URL", "http://localhost:8000")  # Default to local URL if not set
+
     openapi_schema["servers"] = [
         {
-            "url": "https://fastapi-python312-app-548687899732.us-west2.run.app", 
-            "description": "Production server (Google Cloud Run)"
+            "url": server_url,
+            "description": "Production server" if "run.app" in server_url else "Local server"
         }
     ]
+
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 
-# Override the default openapi method with the custom one
+# Override the default OpenAPI method with the custom one
 app.openapi = custom_openapi
 
 if __name__ == "__main__":
     # Run the Uvicorn server to serve the FastAPI app
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
